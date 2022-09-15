@@ -1,0 +1,5 @@
+@baseUrl=http://localhost:3002/api
+
+GET {{baseUrl}}/user/list
+content-type: application/json
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOiJjb3JwIiwicm9sZSI6MiwiaWF0IjoxNjMzMDgwNjQ0LCJleHAiOjE2MzMxNjcwNDR9.J2q9HFR0D8T-OL7MIL0jwLBKQoqNcRmUX843rKRUbpk

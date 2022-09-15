@@ -1,0 +1,23 @@
+version: '3.7'
+
+networks:
+    app-tier:
+        driver: bridge
+
+services:
+    mysql:
+        image: mysql:5.7.34
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_HOST: localhost
+            MYSQL_ROOT_PASSWORD: Root@123
+            MYSQL_DATABASE: nodejs_db
+            LANG: C.UTF-8
+        volumes:
+            - ./mysql/:/var/lib/mysql/
+        networks:
+            - app-tier
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --authentication_policy=mysql_native_password

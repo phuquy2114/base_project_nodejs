@@ -1,0 +1,4 @@
+@baseUrl=http://localhost:3002/api
+
+DELETE {{baseUrl}}/many2many/category/2
+content-type: application/json

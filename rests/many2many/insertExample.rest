@@ -1,0 +1,8 @@
+@baseUrl=http://localhost:3002/api
+
+POST {{baseUrl}}/many2many/insertExample
+content-type: application/json
+
+{
+    
+}
