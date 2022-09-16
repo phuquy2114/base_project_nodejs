@@ -1,39 +1,36 @@
-import { Roles } from '../../consts/Roles';
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { Exclude, Expose } from 'class-transformer';
+import { BaseEntity, Column, CreateDateColumn, Double, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity({ name: 'users' })
-export class User extends BaseEntity {
+@Entity({ name: 'location' })
+export class Location extends BaseEntity {
   @PrimaryColumn({
     length: 150
   })
-  usr: string;
+  uuid: string;
 
-  @Exclude()
   @Column({
+    name: 'lat',
+    type: 'decimal',
+    precision: 15,
+    scale: 12,
+    nullable: true,
+  })
+  lat: number;
+
+  @Column({
+    name: 'log',
+    type: 'decimal',
+    precision: 15,
+    scale: 12,
+    nullable: true,
+  })
+  log: number; 
+
+  @Column({
+    name: 'address',
     nullable: false,
     length: 150
   })
-  pwd: string;
-
-  @Column({
-    name: 'first_name',
-    nullable: false,
-    length: 150
-  })
-  firstName: string;
-
-  @Column({
-    name: 'last_name',
-    nullable: false,
-    length: 150
-  })
-  lastName: string;
-
-  @Column({
-    nullable: false
-  })
-  role: Roles;
+  address: string; 
 
   @CreateDateColumn({
     name: 'created_at',
@@ -47,13 +44,8 @@ export class User extends BaseEntity {
   })
   updatedAt: string;
 
-  constructor(partial: Partial<User>) {
+  constructor(partial: Partial<Location>) {
     super();
     Object.assign(this, partial);
-  }
-
-  @Expose()
-  get fullName(): string {
-    return `${this.firstName} ${this.lastName}`;
   }
 }

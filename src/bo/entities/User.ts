@@ -1,5 +1,6 @@
 import { Roles } from '../../consts/Roles';
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {Location} from '../entities/Location';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 
 @Entity({ name: 'users' })
@@ -34,6 +35,39 @@ export class User extends BaseEntity {
     nullable: false
   })
   role: Roles;
+
+  @Column({
+    name: 'device_token',
+  })
+  deviceToken: string; 
+
+  @Column({
+    name: 'phone',
+  })
+  phone: string;
+
+  @Column({
+    name: 'avatar',
+    nullable: true,
+  })
+  avatar: string; 
+
+  @Column({
+    name: 'address',
+    nullable: false,
+    length: 150
+  })
+  address: string; 
+
+  @OneToOne(() => Location)
+  @JoinColumn({name : 'location'})
+  location: Location; 
+
+  @Column({
+    name: 'code',
+    length : 4
+  })
+  code: string;
 
   @CreateDateColumn({
     name: 'created_at',
