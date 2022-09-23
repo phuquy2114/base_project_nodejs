@@ -17,7 +17,7 @@ export default {
         "charset": "utf8mb4_unicode_ci"
         },
     entities: ["src/bo/entities/*.{ts,js}"],
-    migrations: ["src/migrations/*.{ts,js}"],
+    migrations: [],
     cli: {
         migrationsDir: "src/migrations",
         entitiesDir: "src/bo/entities"
