@@ -13,16 +13,30 @@ import * as entities from './bo/entities/index';
 import * as many2manyEntities from './bo/entities/many2many/index';
 import * as one2oneEntities from './bo/entities/one2one/index';
 import * as ormconfig from '../ormconfig';
+import express from 'express';
 
 class ApiServer extends Server {
   private className = 'ApiServer';
   private appserver: http.Server;
 
+  private options = {
+    dotfiles: 'ignore',
+    etag: false,
+    extensions: ['jpg', 'png', 'gif'],
+    index: false,
+    maxAge: '1d',
+    redirect: false,
+    setHeaders: function (res : any, path : any, stat : any) {
+      res.set('x-timestamp', Date.now())
+    }
+  }
+  
   constructor() {
     super(true);
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.all('/*', this.setupCORS);
+    this.app.use(express.static('public', this.options))
   }
 
   private async initServer(): Promise<void> {
