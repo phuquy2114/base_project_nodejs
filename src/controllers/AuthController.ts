@@ -24,6 +24,7 @@ export class AuthController {
 
       res.status(200).json({ data: authenRes });
     } catch (e) {
+      console.log(e);
       next(e);
     }
   }

@@ -1,11 +1,9 @@
-import { BaseEntity, Column, CreateDateColumn, Double, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Double, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'location' })
 export class Location extends BaseEntity {
-  @PrimaryColumn({
-    length: 150
-  })
-  uuid: string;
+  @PrimaryGeneratedColumn()
+  uuid: number
 
   @Column({
     name: 'lat',

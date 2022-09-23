@@ -60,7 +60,7 @@ class ApiServer extends Server {
     const configDB: any = {
       ...ormconfig.default,
       entities: arrEntities,
-      migrations: undefined,
+      migrations: [],
       cli: undefined
     };
 

@@ -1,11 +1,14 @@
 import { Roles } from '../../consts/Roles';
 import {Location} from '../entities/Location';
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
-  @PrimaryColumn({
+  @PrimaryGeneratedColumn()
+  uuid: number
+  
+  @Column({
     length: 150
   })
   usr: string;
@@ -59,8 +62,8 @@ export class User extends BaseEntity {
   })
   address: string; 
 
-  @OneToOne(() => Location)
-  @JoinColumn({name : 'location'})
+  @OneToOne(() => Location , { cascade: true, primary: true })
+  @JoinColumn()
   location: Location; 
 
   @Column({
