@@ -50,17 +50,18 @@ export class UserController {
   }
 
   @Post('register')
-  @Middleware([])
-  @Middleware([uploadMiddleware('file', 10)])
-  private async addUser(req: Request, res: Response, next: NextFunction, ): Promise<void> {
+  @Middleware([uploadMiddleware('file', 10)]) // 10 : file size 
+  private async addUser(req: Request, res: Response, next: NextFunction,): Promise<void> {
     Log.info(this.className, 'addUser', `RQ`, { req: req });
 
     try {
       const user: User = JSON.parse(req.body.jsonData) as User;
       var val = Math.floor(1000 + Math.random() * 9000);
       console.log(val);
+      var avatar = `${process.env.UPLOAD_FOLDER}/${req.file.filename}`
       user.code = val.toString();
-      // user.avatar = filename.toString();
+      user.avatar = avatar.toString();
+      
       const newUser: User = await this.userService.store(user).catch((e) => {
         throw e;
       });
