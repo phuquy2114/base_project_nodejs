@@ -26,17 +26,18 @@ class ApiServer extends Server {
     index: false,
     maxAge: '1d',
     redirect: false,
-    setHeaders: function (res : any, path : any, stat : any) {
+    setHeaders: function (res: any, path: any, stat: any) {
       res.set('x-timestamp', Date.now())
     }
   }
-  
+
   constructor() {
     super(true);
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.all('/*', this.setupCORS);
-    this.app.use(express.static('public', this.options))
+    this.app.use(express.static('public', this.options));
+    this.app.use('/upload', express.static('upload'));
   }
 
   private async initServer(): Promise<void> {
@@ -47,7 +48,7 @@ class ApiServer extends Server {
     for (const name in entities) {
       if (Object.prototype.hasOwnProperty.call(entities, name)) {
         // eslint-disable-next-line
-        const entity:any = (entities as any)[name];
+        const entity: any = (entities as any)[name];
         arrEntities.push(entity);
       }
     }
@@ -56,7 +57,7 @@ class ApiServer extends Server {
     for (const name in many2manyEntities) {
       if (Object.prototype.hasOwnProperty.call(many2manyEntities, name)) {
         // eslint-disable-next-line
-        const entity:any = (many2manyEntities as any)[name];
+        const entity: any = (many2manyEntities as any)[name];
         arrEntities.push(entity);
       }
     }
@@ -65,7 +66,7 @@ class ApiServer extends Server {
     for (const name in one2oneEntities) {
       if (Object.prototype.hasOwnProperty.call(one2oneEntities, name)) {
         // eslint-disable-next-line
-        const entity:any = (one2oneEntities as any)[name];
+        const entity: any = (one2oneEntities as any)[name];
         arrEntities.push(entity);
       }
     }
