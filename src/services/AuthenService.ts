@@ -31,6 +31,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
       };
 
       const token = jwt.sign(jwtInfo, <string>process.env.JWT_SECRET, { expiresIn: process.env.TOKEN_EXPIRE });
+      
       const authenRes: AuthenRes = {
         usr: user.usr,
         fullname: user.fullName,

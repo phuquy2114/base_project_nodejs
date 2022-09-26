@@ -1,4 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, Double, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { User } from './User';
 
 @Entity({ name: 'location' })
 export class Location extends BaseEntity {
@@ -21,14 +22,14 @@ export class Location extends BaseEntity {
     scale: 12,
     nullable: true,
   })
-  log: number; 
+  log: number;
 
   @Column({
     name: 'address',
     nullable: false,
     length: 150
   })
-  address: string; 
+  address: string;
 
   @CreateDateColumn({
     name: 'created_at',

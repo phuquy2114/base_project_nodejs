@@ -56,21 +56,15 @@ export class User extends BaseEntity {
   avatar: string; 
 
   @Column({
-    name: 'address',
-    nullable: false,
-    length: 150
-  })
-  address: string; 
-
-  @OneToOne(() => Location , { cascade: true, primary: true })
-  @JoinColumn()
-  location: Location; 
-
-  @Column({
     name: 'code',
-    length : 4
+    length : 4,
+    nullable: false,
   })
   code: string;
+
+  @OneToOne(() => Location , { cascade: true, primary: false })
+  @JoinColumn()
+  location: Location; 
 
   @CreateDateColumn({
     name: 'created_at',
