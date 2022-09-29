@@ -8,11 +8,13 @@ import { Roles } from '../consts/Roles';
 import { Service } from 'typedi';
 import Log from '../utils/Log';
 import { uploadMiddleware } from '../middleware/upload.middleware';
+import { BaseResponse } from '../services/BaseResponse';
 
 @Service()
 @Controller('api/user')
 export class UserController {
 
+  private dataResponse: BaseResponse = new BaseResponse();
   private className = 'UserController';
   constructor(private readonly userService: UserService) { }
 
@@ -66,7 +68,11 @@ export class UserController {
         throw e;
       });
 
-      res.status(200).json({ data: newUser });
+
+      this.dataResponse.status = 200;
+      this.dataResponse.data = newUser;
+      this.dataResponse.message = 'Register Successfull';
+      res.status(200).json(this.dataResponse);
     } catch (e) {
       next(e);
     }
