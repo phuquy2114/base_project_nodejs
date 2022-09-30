@@ -7,6 +7,10 @@ import { Service } from 'typedi';
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   getCustomerUsers(): Promise<User[]> {
-    return this.createQueryBuilder().where('role = :role', { role: Roles.CUSTOMER }).getMany();
+    return this.createQueryBuilder().where('role = :role', { role: Roles.CORPORATE }).getMany();
+  }
+
+  getByUsername(usr:string): Promise<User> {
+    return this.createQueryBuilder().where('usr = :usr', { usr: usr }).getOne();
   }
 }

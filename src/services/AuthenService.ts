@@ -16,13 +16,19 @@ export class AuthenService extends BaseService<User, UserRepository> {
   }
 
   public async login(authenReq: AuthenReq): Promise<AuthenRes | undefined> {
+    console.log('start login');
+    console.log(authenReq);
     if (!authenReq.usr || authenReq.usr.trim().length === 0 || !authenReq.pwd || authenReq.pwd.trim().length === 0) {
       throw new AppException('login_failed', 'usr or pwd empty');
     }
 
-    const user: User | undefined = await this.findById(authenReq.usr).catch((err) => {
+    console.log('getByUsername');
+    const user: User | undefined = await this.repository.getByUsername(authenReq.usr).catch((err) => {
       throw err;
     });
+
+    console.log('user');
+    console.log(user);
 
     if (user && user.pwd === authenReq.pwd) {
       const jwtInfo: JwtInfo = {
@@ -31,7 +37,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
       };
 
       const token = jwt.sign(jwtInfo, <string>process.env.JWT_SECRET, { expiresIn: process.env.TOKEN_EXPIRE });
-      
+
       const authenRes: AuthenRes = {
         usr: user.usr,
         fullname: user.fullName,
