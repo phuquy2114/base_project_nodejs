@@ -27,8 +27,10 @@ export class UserController {
       const result: User[] = await this.userService.getCustomerUsers().catch((e) => {
         throw e;
       });
-
-      res.status(200).json({ data: result });
+      this.dataResponse.status = 200;
+      this.dataResponse.data = result;
+      this.dataResponse.message = 'Successfull';
+      res.status(200).json(this.dataResponse);
     } catch (e) {
       next(e);
     }

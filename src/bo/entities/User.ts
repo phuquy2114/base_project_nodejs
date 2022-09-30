@@ -16,7 +16,7 @@ export class User extends BaseEntity {
   @Exclude()
   @Column({
     nullable: false,
-    length: 150
+    length: 150,
   })
   pwd: string;
 

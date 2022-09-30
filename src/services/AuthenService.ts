@@ -1,7 +1,7 @@
 import { User } from '../bo/entities/User';
-import { AuthenReq } from '../bo/models/Authen/AuthenReq';
+import { AuthenReq } from '../bo/models/AuthenReq';
 import { UserRepository } from '../repositories/UserRepository';
-import { AuthenRes } from '../bo/models/Authen/AuthenRes';
+import { AuthenRes } from '../bo/models/AuthenRes';
 import * as jwt from 'jsonwebtoken';
 import { JwtInfo } from '../bo/models/JwtInfo';
 import AppException from '../exceptions/AppException';
@@ -16,7 +16,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
   }
 
   public async login(authenReq: AuthenReq): Promise<AuthenRes | undefined> {
-    console.log('start login');
+    console.log('start');
     console.log(authenReq);
     if (!authenReq.usr || authenReq.usr.trim().length === 0 || !authenReq.pwd || authenReq.pwd.trim().length === 0) {
       throw new AppException('login_failed', 'usr or pwd empty');

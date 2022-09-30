@@ -11,6 +11,7 @@ export class UserRepository extends Repository<User> {
   }
 
   getByUsername(usr:string): Promise<User> {
-    return this.createQueryBuilder().where('usr = :usr', { usr: usr }).getOne();
+    return this.createQueryBuilder()
+    .where('usr = :usr', { usr: usr }).getOne();
   }
 }

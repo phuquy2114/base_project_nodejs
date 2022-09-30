@@ -1,4 +1,5 @@
-import { Roles } from '../../../consts/Roles';
+import { User } from 'src/bo/entities';
+import { Roles } from '../../consts/Roles';
 
 export interface AuthenRes {
   usr: string;
