@@ -62,13 +62,25 @@ export class UserController {
 
       const user: User = JSON.parse(req.body.jsonData) as User;
 
+      const result: User = await this.userService.findByUserName(user.usr).catch((e) => {
+        throw e;
+      });
+
+      if (result != null) {
+        this.dataResponse.status = 200;
+        this.dataResponse.data = {};
+        this.dataResponse.message = ' Username already exists ';
+        res.status(200).json(this.dataResponse);
+        return;
+      }
+
       var val = Math.floor(1000 + Math.random() * 9000);
-   
+
 
       var avatar = `${process.env.UPLOAD_FOLDER}/${req.file.filename}`
       user.code = val.toString();
       user.avatar = avatar.toString();
-      
+
       console.log(val);
       console.log(avatar);
 

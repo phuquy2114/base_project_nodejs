@@ -17,4 +17,8 @@ export class UserService extends BaseService<User, UserRepository> {
   getCustomerUsers(): Promise<User[]> {
     return this.repository.getCustomerUsers();
   }
+
+  findByUserName(username: string): Promise<User | null> {
+    return this.repository.findOne({ usr : username });
+  }
 }
