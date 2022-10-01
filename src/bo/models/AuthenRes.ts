@@ -1,9 +1,8 @@
 import { User } from 'src/bo/entities';
 import { Roles } from '../../consts/Roles';
+import { UserRes } from './UserRes';
 
 export interface AuthenRes {
-  usr: string;
-  fullname: string;
-  role: Roles;
+  user : UserRes
   token: string;
 }

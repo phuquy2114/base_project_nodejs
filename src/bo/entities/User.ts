@@ -51,7 +51,7 @@ export class User extends BaseEntity {
 
   @Column({
     name: 'avatar',
-    nullable: true,
+    nullable: false,
   })
   avatar: string; 
 

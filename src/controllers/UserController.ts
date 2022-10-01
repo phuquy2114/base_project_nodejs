@@ -59,13 +59,19 @@ export class UserController {
     Log.info(this.className, 'addUser', `RQ`, { req: req });
 
     try {
+
       const user: User = JSON.parse(req.body.jsonData) as User;
+
       var val = Math.floor(1000 + Math.random() * 9000);
-      console.log(val);
+   
+
       var avatar = `${process.env.UPLOAD_FOLDER}/${req.file.filename}`
       user.code = val.toString();
       user.avatar = avatar.toString();
       
+      console.log(val);
+      console.log(avatar);
+
       const newUser: User = await this.userService.store(user).catch((e) => {
         throw e;
       });
@@ -74,6 +80,7 @@ export class UserController {
       this.dataResponse.status = 200;
       this.dataResponse.data = newUser;
       this.dataResponse.message = 'Register Successfull';
+
       res.status(200).json(this.dataResponse);
     } catch (e) {
       next(e);

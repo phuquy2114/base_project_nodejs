@@ -8,6 +8,7 @@ import AppException from '../exceptions/AppException';
 import { BaseService } from './BaseService';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { UserRes } from 'src/bo/models/UserRes';
 
 @Service()
 export class AuthenService extends BaseService<User, UserRepository> {
@@ -37,11 +38,20 @@ export class AuthenService extends BaseService<User, UserRepository> {
       };
 
       const token = jwt.sign(jwtInfo, <string>process.env.JWT_SECRET, { expiresIn: process.env.TOKEN_EXPIRE });
-
-      const authenRes: AuthenRes = {
+      const userResData: UserRes = {
         usr: user.usr,
         fullname: user.fullName,
-        role: user.role,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatar: user.avatar,
+        phone: user.phone,
+        role:  user.role,
+        location:  user.location,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
+      const authenRes: AuthenRes = {
+        user : userResData,
         token: token
       };
 
