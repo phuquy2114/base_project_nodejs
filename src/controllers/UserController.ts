@@ -27,6 +27,7 @@ export class UserController {
       const result: User[] = await this.userService.getCustomerUsers().catch((e) => {
         throw e;
       });
+      
       this.dataResponse.status = 200;
       this.dataResponse.data = result;
       this.dataResponse.message = 'Successfull';
@@ -41,6 +42,26 @@ export class UserController {
   private async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'getUser', `RQ`, { req: req });
 
+    try {
+      const id: string = req.params.id;
+      const item: User = await this.userService.findById(id).catch((e) => {
+        throw e;
+      });
+
+      this.dataResponse.status = 200;
+      this.dataResponse.data = item;
+      this.dataResponse.message = 'Successfull';
+      res.status(200).json(this.dataResponse);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  @Get('me')
+  @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
+  private async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    Log.info(this.className, 'user', `RQ`, { req: req });
+    console.log();
     try {
       const username: string = req.params.id;
       const item: User = await this.userService.findById(username).catch((e) => {
@@ -67,9 +88,17 @@ export class UserController {
       });
 
       if (result != null) {
+
         this.dataResponse.status = 200;
         this.dataResponse.data = {};
-        this.dataResponse.message = ' Username already exists ';
+        if (result.usr === user.usr) {
+          this.dataResponse.message = ' Username already exists ';
+        } else if (result.phone === user.phone) {
+          this.dataResponse.message = ' Phone already exists ';
+        } else {
+          this.dataResponse.message = ' User already exists ';
+        }
+
         res.status(200).json(this.dataResponse);
         return;
       }
@@ -99,13 +128,43 @@ export class UserController {
     }
   }
 
-  @Put()
+  @Post('change_password')
+  @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }])])
+  private async changePassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+    Log.info(this.className, 'updateUser', `RQ`, { req: req });
+
+    try {
+      console.log(req.body.oldPass);
+      console.log(req.body.newPass);
+      console.log(req.body.confirmPass);
+      const user: User = <User>req.body;
+
+      const newUser: User = await this.userService.update(user.usr, user).catch((e) => {
+        throw e;
+      });
+
+      this.dataResponse.status = 200;
+      this.dataResponse.data = newUser;
+      this.dataResponse.message = 'Register Successfull';
+
+      res.status(200).json(this.dataResponse);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  @Put('update')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }])])
   private async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'updateUser', `RQ`, { req: req });
 
     try {
+      console.log(req.body.firstName);
+      console.log(req.body.lastName);
+      console.log(req.body.avatar);
+      console.log(req.body.phone);
       const user: User = <User>req.body;
+
       const newUser: User = await this.userService.update(user.usr, user).catch((e) => {
         throw e;
       });

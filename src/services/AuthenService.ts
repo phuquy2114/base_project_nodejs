@@ -9,6 +9,7 @@ import { BaseService } from './BaseService';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserRes } from 'src/bo/models/UserRes';
+import { CodeRes } from 'src/bo/models/CodeRes';
 
 @Service()
 export class AuthenService extends BaseService<User, UserRepository> {
@@ -45,17 +46,43 @@ export class AuthenService extends BaseService<User, UserRepository> {
         lastName: user.lastName,
         avatar: user.avatar,
         phone: user.phone,
-        role:  user.role,
-        location:  user.location,
+        role: user.role,
+        location: user.location,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       };
       const authenRes: AuthenRes = {
-        user : userResData,
+        user: userResData,
         token: token
       };
 
       return authenRes;
+    } else {
+      throw new AppException('login_failed', !user ? 'user doest not exist' : 'wrong password');
+    }
+  }
+
+  public async forgotPass(authenReq: string): Promise<CodeRes | undefined> {
+    console.log('start');
+    console.log(authenReq);
+
+    if (authenReq.trim().length === 0) {
+      throw new AppException('login_failed', 'username  empty');
+    }
+
+    console.log('getByUsername');
+    const user: User | undefined = await this.repository.getByUsername(authenReq).catch((err) => {
+      throw err;
+    });
+    console.log('user');
+    console.log(user);
+    
+    if (user) {
+      const code: CodeRes = {
+        code: "1234"
+      }
+
+      return code;
     } else {
       throw new AppException('login_failed', !user ? 'user doest not exist' : 'wrong password');
     }

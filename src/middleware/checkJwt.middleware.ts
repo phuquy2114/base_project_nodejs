@@ -8,6 +8,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction): void 
   let token = <string>req.headers['authorization'];
   if (token) {
     const tokenType: string = <string>process.env.TOKEN_TYPE;
+
     if (tokenType) token = token.substr(tokenType.length + 1);
 
     const jwtToken: string = <string>process.env.JWT_SECRET;
@@ -22,6 +23,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction): void 
       };
 
       res.locals.jwtPayload = jwtInfo;
+
     } catch (ex) {
       // token invalid
       res.status(401).json({ errCd: 'author_failed' });
