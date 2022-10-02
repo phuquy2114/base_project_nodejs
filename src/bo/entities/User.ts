@@ -5,6 +5,7 @@ import { Exclude, Expose } from 'class-transformer';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
+  
   @PrimaryGeneratedColumn()
   uuid: number
   

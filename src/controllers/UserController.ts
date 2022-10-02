@@ -9,6 +9,7 @@ import { Service } from 'typedi';
 import Log from '../utils/Log';
 import { uploadMiddleware } from '../middleware/upload.middleware';
 import { BaseResponse } from '../services/BaseResponse';
+import { JwtInfo } from 'src/bo/models/JwtInfo';
 
 @Service()
 @Controller('api/user')
@@ -27,7 +28,7 @@ export class UserController {
       const result: User[] = await this.userService.getCustomerUsers().catch((e) => {
         throw e;
       });
-      
+
       this.dataResponse.status = 200;
       this.dataResponse.data = result;
       this.dataResponse.message = 'Successfull';
@@ -61,7 +62,7 @@ export class UserController {
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
   private async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'user', `RQ`, { req: req });
-    console.log();
+    console.log(res.locals.jwtPayload);
     try {
       const username: string = req.params.id;
       const item: User = await this.userService.findById(username).catch((e) => {
@@ -132,22 +133,37 @@ export class UserController {
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }])])
   private async changePassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'updateUser', `RQ`, { req: req });
-
+    const jwtInfo = <JwtInfo>res.locals.jwtPayload;
     try {
       console.log(req.body.oldPass);
       console.log(req.body.newPass);
       console.log(req.body.confirmPass);
-      const user: User = <User>req.body;
+      console.log(jwtInfo);
 
-      const newUser: User = await this.userService.update(user.usr, user).catch((e) => {
-        throw e;
+      const user: User | undefined = await this.userService.findById(res.locals.jwtPayload['uuid']).catch((err) => {
+        throw err;
       });
 
-      this.dataResponse.status = 200;
-      this.dataResponse.data = newUser;
-      this.dataResponse.message = 'Register Successfull';
+      if (req.body.oldPass == user.pwd) {
+        user.pwd = req.body.newPass;
+        const newUser: User = await this.userService.update(user.uuid, user).catch((e) => {
+          throw e;
+        });
 
-      res.status(200).json(this.dataResponse);
+        this.dataResponse.status = 200;
+        this.dataResponse.data = newUser;
+        this.dataResponse.message = 'Update the successfull';
+
+        res.status(200).json(this.dataResponse);
+      } else {
+        this.dataResponse.status = 400;
+        this.dataResponse.data = {};
+        this.dataResponse.error = 101;
+        this.dataResponse.message = 'Incorrect the old Password';
+
+        res.status(200).json(this.dataResponse);
+      }
+
     } catch (e) {
       next(e);
     }

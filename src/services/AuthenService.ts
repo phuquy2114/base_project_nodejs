@@ -20,6 +20,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
   public async login(authenReq: AuthenReq): Promise<AuthenRes | undefined> {
     console.log('start');
     console.log(authenReq);
+
     if (!authenReq.usr || authenReq.usr.trim().length === 0 || !authenReq.pwd || authenReq.pwd.trim().length === 0) {
       throw new AppException('login_failed', 'usr or pwd empty');
     }
@@ -34,12 +35,15 @@ export class AuthenService extends BaseService<User, UserRepository> {
 
     if (user && user.pwd === authenReq.pwd) {
       const jwtInfo: JwtInfo = {
+        uuid: user.uuid,
         usr: user.usr,
         role: user.role
       };
 
       const token = jwt.sign(jwtInfo, <string>process.env.JWT_SECRET, { expiresIn: process.env.TOKEN_EXPIRE });
+
       const userResData: UserRes = {
+        id: user.uuid,
         usr: user.usr,
         fullname: user.fullName,
         firstName: user.firstName,
@@ -76,7 +80,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
     });
     console.log('user');
     console.log(user);
-    
+
     if (user) {
       const code: CodeRes = {
         code: "1234"

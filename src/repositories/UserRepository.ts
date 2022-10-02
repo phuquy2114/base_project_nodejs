@@ -22,7 +22,9 @@ export class UserRepository extends Repository<User> {
   updateUser(usr: string): Promise<UpdateResult> {
     return this.createQueryBuilder()
       .update(User)
-      .set({})
+      .set({
+        
+      })
       .where('usr = :usr', { usr: usr }).execute();
   }
 }
