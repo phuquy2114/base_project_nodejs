@@ -19,11 +19,11 @@ export class UserRepository extends Repository<User> {
       .where('usr = :usr', { usr: usr }).getOne();
   }
 
-  updateUser(usr: string): Promise<UpdateResult> {
+  updateNewPassword(usr: string, pwd : string): Promise<UpdateResult> {
     return this.createQueryBuilder()
       .update(User)
       .set({
-        
+        pwd: "pwd",
       })
       .where('usr = :usr', { usr: usr }).execute();
   }

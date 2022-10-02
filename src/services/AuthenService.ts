@@ -10,6 +10,7 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserRes } from 'src/bo/models/UserRes';
 import { CodeRes } from 'src/bo/models/CodeRes';
+import { NewPasswordReq } from 'src/bo/models/NewPasswordReq';
 
 @Service()
 export class AuthenService extends BaseService<User, UserRepository> {
@@ -66,29 +67,64 @@ export class AuthenService extends BaseService<User, UserRepository> {
     }
   }
 
-  public async forgotPass(authenReq: string): Promise<CodeRes | undefined> {
+  public async forgotPass(username: string): Promise<CodeRes | undefined> {
     console.log('start');
-    console.log(authenReq);
+    console.log(username);
 
-    if (authenReq.trim().length === 0) {
+    if (username.trim().length === 0) {
       throw new AppException('login_failed', 'username  empty');
     }
 
     console.log('getByUsername');
-    const user: User | undefined = await this.repository.getByUsername(authenReq).catch((err) => {
+
+    const user: User | undefined = await this.repository.getByUsername(username).catch((err) => {
       throw err;
     });
+
     console.log('user');
     console.log(user);
 
     if (user) {
       const code: CodeRes = {
-        code: "1234"
+        code: user.code
       }
 
       return code;
     } else {
-      throw new AppException('login_failed', !user ? 'user doest not exist' : 'wrong password');
+      throw new AppException('The User doest not exist', !user ? 'user doest not exist' : 'wrong password');
+    }
+  }
+
+  public async newPass(body: NewPasswordReq): Promise<CodeRes | undefined> {
+    console.log('start');
+    console.log(body);
+
+    if (body.username.trim().length === 0) {
+      throw new AppException('login_failed', 'username  empty');
+    }
+
+    console.log('getByUsername');
+
+    const user: User | undefined = await this.repository.getByUsername(body.username).catch((err) => {
+      throw err;
+    });
+
+    if (user) {
+      if (body.code === user.code) {
+        throw new AppException('login_failed', 'Code not math');
+      }
+
+      user.pwd = body.newPass;
+      await this.repository.updateNewPassword(body.username,body.newPass).catch((err) => {
+        throw err;
+      });
+
+      const code: CodeRes = {
+        code: "0000"
+      }
+      return code;
+    } else {
+      throw new AppException('The User doest not exist', !user ? 'user doest not exist' : 'wrong password');
     }
   }
 }

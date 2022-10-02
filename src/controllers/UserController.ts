@@ -40,7 +40,7 @@ export class UserController {
 
   @Get(':id')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
-  private async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  private async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'getUser', `RQ`, { req: req });
 
     try {
@@ -64,12 +64,14 @@ export class UserController {
     Log.info(this.className, 'user', `RQ`, { req: req });
     console.log(res.locals.jwtPayload);
     try {
-      const username: string = req.params.id;
-      const item: User = await this.userService.findById(username).catch((e) => {
+      const item: User = await this.userService.findById(res.locals.jwtPayload['uui']).catch((e) => {
         throw e;
       });
-
-      res.status(200).json({ data: item });
+      
+      this.dataResponse.status = 200;
+      this.dataResponse.data = item;
+      this.dataResponse.message = 'Successfull';
+      res.status(200).json(this.dataResponse);
     } catch (e) {
       next(e);
     }

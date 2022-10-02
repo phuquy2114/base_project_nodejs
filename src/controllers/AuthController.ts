@@ -7,6 +7,7 @@ import { Service } from 'typedi';
 import { Controller, Middleware, Post } from '@overnightjs/core';
 import { BaseResponse } from '../services/BaseResponse';
 import { CodeRes } from 'src/bo/models/CodeRes';
+import { NewPasswordReq } from 'src/bo/models/NewPasswordReq';
 
 @Service()
 @Controller('api/auth')
@@ -40,9 +41,32 @@ export class AuthController {
   private async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'register', `RQ`, { req: req });
 
+    console.log(req.body);
     try {
-      const authenReq: string = req.body.username;
-      const authenRes: CodeRes = await this.authenService.forgotPass(authenReq).catch((e) => {
+      const username: string = req.body.username;
+      const authenRes: CodeRes = await this.authenService.forgotPass(username).catch((e) => {
+        throw e;
+      });
+
+      this.dataResponse.status = 200;
+      this.dataResponse.data = authenRes;
+      this.dataResponse.message = 'Login Successfull';
+
+      res.status(200).json(this.dataResponse);
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  }
+
+  @Post('new_password')
+  private async newPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+    Log.info(this.className, 'register', `RQ`, { req: req });
+
+    console.log(req.body);
+    try {
+      const username: NewPasswordReq = req.body;
+      const authenRes: CodeRes = await this.authenService.newPass(username).catch((e) => {
         throw e;
       });
 
