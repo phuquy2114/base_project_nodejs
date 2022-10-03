@@ -11,6 +11,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserRes } from 'src/models/UserRes';
 import { CodeRes } from 'src/models/CodeRes';
 import { NewPasswordReq } from 'src/models/NewPasswordReq';
+import { LocationRes } from 'src/models/LocationRes';
 
 @Service()
 export class AuthenService extends BaseService<User, UserRepository> {
@@ -43,6 +44,12 @@ export class AuthenService extends BaseService<User, UserRepository> {
 
       const token = jwt.sign(jwtInfo, <string>process.env.JWT_SECRET, { expiresIn: process.env.TOKEN_EXPIRE });
 
+      const location: LocationRes = {
+        address : user.location.address,
+        log : parseFloat(user.location.log.toString()),
+        lat : parseFloat(user.location.lat.toString()) ,
+      };
+
       const userResData: UserRes = {
         id: user.uuid,
         usr: user.usr,
@@ -52,7 +59,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
         avatar: user.avatar,
         phone: user.phone,
         role: user.role,
-        location: user.location,
+        location: location,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       };

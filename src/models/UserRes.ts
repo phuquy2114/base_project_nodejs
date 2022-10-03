@@ -10,7 +10,7 @@ export interface UserRes {
   avatar: string;
   phone: string;
   role: Roles;
-  location: Location;
+  location: Object;
   createdAt: string;
   updatedAt: string;
 }
