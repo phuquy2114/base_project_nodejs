@@ -3,13 +3,13 @@ import { Controller, Middleware, Get, Put, Post } from '@overnightjs/core';
 import { checkJwt } from '../middleware/checkJwt.middleware';
 import { checkRole } from '../middleware/checkRole.middleware';
 import { UserService } from '../services/UserService';
-import { User } from '../bo/entities/User';
+import { User } from '../entities/User';
 import { Roles } from '../consts/Roles';
 import { Service } from 'typedi';
 import Log from '../utils/Log';
 import { uploadMiddleware } from '../middleware/upload.middleware';
 import { BaseResponse } from '../services/BaseResponse';
-import { JwtInfo } from 'src/bo/models/JwtInfo';
+import { JwtInfo } from 'src/models/JwtInfo';
 
 @Service()
 @Controller('api/user')
@@ -67,7 +67,7 @@ export class UserController {
       const item: User = await this.userService.findById(res.locals.jwtPayload['uui']).catch((e) => {
         throw e;
       });
-      
+
       this.dataResponse.status = 200;
       this.dataResponse.data = item;
       this.dataResponse.message = 'Successfull';

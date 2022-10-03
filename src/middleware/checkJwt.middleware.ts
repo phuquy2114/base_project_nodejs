@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import Log from '../utils/Log';
-import { JwtInfo } from '../bo/models/JwtInfo';
+import { JwtInfo } from '../models/JwtInfo';
 import { BaseResponse } from '../services/BaseResponse';
 
 export const checkJwt = (req: Request, res: Response, next: NextFunction): void => {

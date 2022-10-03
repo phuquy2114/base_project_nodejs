@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthenService } from '../services/AuthenService';
-import { AuthenReq } from '../bo/models/AuthenReq';
-import { AuthenRes } from '../bo/models/AuthenRes';
+import { AuthenReq } from '../models/AuthenReq';
+import { AuthenRes } from '../models/AuthenRes';
 import Log from '../utils/Log';
 import { Service } from 'typedi';
 import { Controller, Middleware, Post } from '@overnightjs/core';
 import { BaseResponse } from '../services/BaseResponse';
-import { CodeRes } from 'src/bo/models/CodeRes';
-import { NewPasswordReq } from 'src/bo/models/NewPasswordReq';
+import { CodeRes } from 'src/models/CodeRes';
+import { NewPasswordReq } from 'src/models/NewPasswordReq';
 
 @Service()
 @Controller('api/auth')

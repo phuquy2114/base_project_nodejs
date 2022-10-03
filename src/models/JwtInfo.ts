@@ -1,4 +1,4 @@
-import { Roles } from '../../consts/Roles';
+import { Roles } from '../consts/Roles';
 
 export class JwtInfo {
   uuid: number = null;

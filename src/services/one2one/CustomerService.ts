@@ -1,4 +1,4 @@
-import { Customer } from '../../bo/entities/one2one/Customer';
+import { Customer } from '../../entities/one2one/Customer';
 import { CustomerRepository } from '../../repositories/one2one/CustomerRepository';
 import { BaseService } from '../BaseService';
 import { Service } from 'typedi';

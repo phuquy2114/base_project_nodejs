@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Controller, Post } from '@overnightjs/core';
 import { CustomerProfileService, CustomerService } from '../services/one2one/index';
-import { CustomerProfile, Customer } from '../bo/entities/one2one/index';
+import { CustomerProfile, Customer } from '../entities/one2one/index';
 import { Service } from 'typedi';
 import Log from '../utils/Log';
 

@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Category } from '../../bo/entities/many2many/Category';
+import { Category } from '../../entities/many2many/Category';
 import { Service } from 'typedi';
 
 @Service()

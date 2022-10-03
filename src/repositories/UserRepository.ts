@@ -1,5 +1,5 @@
 import { EntityRepository, Repository, UpdateResult } from 'typeorm';
-import { User } from '../bo/entities/User';
+import { User } from '../entities/User';
 import { Roles } from '../consts/Roles';
 import { Service } from 'typedi';
 

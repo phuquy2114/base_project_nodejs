@@ -1,4 +1,4 @@
-import { Category } from '../../bo/entities/many2many/Category';
+import { Category } from '../../entities/many2many/Category';
 import { CategoryRepository } from '../../repositories/many2many/CategoryRepository';
 import { BaseService } from '../BaseService';
 import { Service } from 'typedi';

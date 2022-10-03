@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { RoleCondition } from '../bo/models/RoleCondition';
-import { JwtInfo } from '../bo/models/JwtInfo';
+import { RoleCondition } from '../models/RoleCondition';
+import { JwtInfo } from '../models/JwtInfo';
 import Log from '../utils/Log';
 
 export const checkRole = (roles: Array<RoleCondition>) => {

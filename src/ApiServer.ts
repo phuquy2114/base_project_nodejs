@@ -9,9 +9,9 @@ import { notFoundHandler } from './middleware/notFound.middleware';
 import 'reflect-metadata';
 import Container from 'typedi';
 import { createConnection, useContainer } from 'typeorm';
-import * as entities from './bo/entities/index';
-import * as many2manyEntities from './bo/entities/many2many/index';
-import * as one2oneEntities from './bo/entities/one2one/index';
+import * as entities from './entities/index';
+import * as many2manyEntities from './entities/many2many/index';
+import * as one2oneEntities from './entities/one2one/index';
 import * as ormconfig from '../ormconfig';
 import express from 'express';
 

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Controller, Delete, Post } from '@overnightjs/core';
 import { QuestionService, CategoryService } from '../services/many2many/index';
-import { Question, Category } from '../bo/entities/many2many/index';
+import { Question, Category } from '../entities/many2many/index';
 import { Service } from 'typedi';
 import { DeleteResult } from 'typeorm';
 import Log from '../utils/Log';

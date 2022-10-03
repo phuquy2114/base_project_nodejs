@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { JwtInfo } from '../../bo/models/JwtInfo';
+import { JwtInfo } from '../../models/JwtInfo';
 
 export interface LogOptions {
   json?: boolean;

@@ -1,4 +1,4 @@
-import { Question } from '../../bo/entities/many2many/Question';
+import { Question } from '../../entities/many2many/Question';
 import { QuestionRepository } from '../../repositories/many2many/QuestionRepository';
 import { BaseService } from '../BaseService';
 import { Service } from 'typedi';

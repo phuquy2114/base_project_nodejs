@@ -1,16 +1,16 @@
-import { User } from '../bo/entities/User';
-import { AuthenReq } from '../bo/models/AuthenReq';
+import { User } from '../entities/User';
+import { AuthenReq } from '../models/AuthenReq';
 import { UserRepository } from '../repositories/UserRepository';
-import { AuthenRes } from '../bo/models/AuthenRes';
+import { AuthenRes } from '../models/AuthenRes';
 import * as jwt from 'jsonwebtoken';
-import { JwtInfo } from '../bo/models/JwtInfo';
+import { JwtInfo } from '../models/JwtInfo';
 import AppException from '../exceptions/AppException';
 import { BaseService } from './BaseService';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { UserRes } from 'src/bo/models/UserRes';
-import { CodeRes } from 'src/bo/models/CodeRes';
-import { NewPasswordReq } from 'src/bo/models/NewPasswordReq';
+import { UserRes } from 'src/models/UserRes';
+import { CodeRes } from 'src/models/CodeRes';
+import { NewPasswordReq } from 'src/models/NewPasswordReq';
 
 @Service()
 export class AuthenService extends BaseService<User, UserRepository> {

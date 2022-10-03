@@ -1,6 +1,6 @@
-import { Roles } from '../../consts/Roles';
-import {Location} from '../entities/Location';
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Roles } from '../consts/Roles';
+import {Location} from './Location';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 
 @Entity({ name: 'users' })
