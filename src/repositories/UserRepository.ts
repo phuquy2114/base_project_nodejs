@@ -13,6 +13,13 @@ export class UserRepository extends Repository<User> {
       .getMany();
   }
 
+  getServiceUser(): Promise<User[]> {
+    return this.createQueryBuilder('q')
+      .leftJoinAndSelect("q.location", "location")
+      .where('role = :role', { role: Roles.CUSTOMER })
+      .getMany();
+  }
+
   getByUsername(usr: string): Promise<User> {
     return this.createQueryBuilder('q')
       .leftJoinAndSelect("q.location", "location")
