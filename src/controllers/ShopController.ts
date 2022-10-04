@@ -16,7 +16,7 @@ import { JwtInfo } from 'src/models/JwtInfo';
 export class ShopController {
 
   private dataResponse: BaseResponse = new BaseResponse();
-  private className = 'UserController';
+  private className = 'ShopController';
   constructor(private readonly userService: UserService) { }
 
   @Get('list')
