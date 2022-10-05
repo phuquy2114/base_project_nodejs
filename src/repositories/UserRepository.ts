@@ -37,8 +37,9 @@ export class UserRepository extends Repository<User> {
   }
 
   getRangeServices(lat: number, long: number, range: number = 1000): Promise<User[]> {
-    return this.createQueryBuilder('location')
-      .leftJoinAndSelect("location.location", "location")
+    return this.createQueryBuilder('l')
+      .leftJoinAndSelect("l.location", "location")
+      .select(['ST_Distance(location, ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(location)))/1000 AS distance' ])
       .where('ST_DWithin(location, ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(location)) ,:range)', { role: Roles.CUSTOMER })
       .orderBy("distance", "ASC")
       .setParameters({

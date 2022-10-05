@@ -8,14 +8,14 @@ export class Location extends BaseEntity {
 
   @Column({
     name: 'lat',
-    type: 'decimal',
+    type: 'double precision',
     nullable: true,
   })
   lat: number;
 
   @Column({
     name: 'log',
-    type: 'decimal',
+    type: 'double precision',
     nullable: true,
   })
   log: number;
