@@ -38,6 +38,33 @@ export class ShopController {
     }
   }
 
+  @Get('nearby_shop')
+  @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
+  private async nearByShop(req: Request, res: Response, next: NextFunction): Promise<void> {
+    Log.info(this.className, 'listUser', `RQ`, { req: req });
+
+    try {
+      const lat = req.query.currentLat;
+      const long = req.query.currentLong;
+      const range = req.query.range;
+
+      console.log(lat)
+      console.log(long)
+      console.log(range)
+
+      const result: User[] = await this.userService.getRangeServiceUser(parseFloat(lat.toString()), parseFloat(long.toString()), parseFloat(range.toString())).catch((e) => {
+        throw e;
+      });
+
+      this.dataResponse.status = 200;
+      this.dataResponse.data = result;
+      this.dataResponse.message = 'Successfull';
+      res.status(200).json(this.dataResponse);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   @Get(':id')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
   private async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -50,7 +77,7 @@ export class ShopController {
         where: {
           role: Roles.CUSTOMER,
         },
-        
+
       }).catch((e) => {
         throw e;
       });
@@ -178,5 +205,25 @@ export class ShopController {
     } catch (e) {
       next(e);
     }
+  }
+
+  //This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+  private calcCrow(lat1: number, lon1: number, lat2: number, lon2: number) {
+    var R = 6371; // km
+    var dLat = this.toRad(lat2 - lat1);
+    var dLon = this.toRad(lon2 - lon1);
+    var lat1 = this.toRad(lat1);
+    var lat2 = this.toRad(lat2);
+
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return d;
+  }
+
+  // Converts numeric degrees to radians
+  private toRad(value: number) {
+    return value * Math.PI / 180;
   }
 }

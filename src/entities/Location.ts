@@ -9,8 +9,6 @@ export class Location extends BaseEntity {
   @Column({
     name: 'lat',
     type: 'decimal',
-    precision: 15,
-    scale: 12,
     nullable: true,
   })
   lat: number;
@@ -18,8 +16,6 @@ export class Location extends BaseEntity {
   @Column({
     name: 'log',
     type: 'decimal',
-    precision: 15,
-    scale: 12,
     nullable: true,
   })
   log: number;

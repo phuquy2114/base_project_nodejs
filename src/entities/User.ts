@@ -38,32 +38,32 @@ export class User extends BaseEntity {
 
   @Column({
     name: 'shop',
-    nullable: false,
-    length: 150
+    nullable: true,
+    length: 150,
   })
   shopName: string;
 
   @Column({
     name: 'about',
-    nullable: false,
+    nullable: true,
   })
   about: string;
 
   @Column({
     name: 'infor_contact',
-    nullable: false,
+    nullable: true,
   })
   inforContact: string;
 
   @Column({
     name: 'phone',
-    nullable: false,
+    nullable: true,
   })
   phone: string;
 
   @Column({
     name: 'hot_line',
-    nullable: false,
+    nullable: true,
   })
   hotLine: string;
 

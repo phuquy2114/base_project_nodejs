@@ -19,9 +19,9 @@ export class CommentController {
   private className = 'CommentController';
   constructor(private readonly userService: UserService) { }
 
-  @Get('list')
+  @Get('list/:id')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }])])
-  private async listUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  private async listCommentId(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'listUser', `RQ`, { req: req });
 
     try {
@@ -46,25 +46,6 @@ export class CommentController {
     try {
       const id: string = req.params.id;
       const item: User = await this.userService.findById(id).catch((e) => {
-        throw e;
-      });
-
-      this.dataResponse.status = 200;
-      this.dataResponse.data = item;
-      this.dataResponse.message = 'Successfull';
-      res.status(200).json(this.dataResponse);
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  @Get('me')
-  @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
-  private async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
-    Log.info(this.className, 'user', `RQ`, { req: req });
-    console.log(res.locals.jwtPayload);
-    try {
-      const item: User = await this.userService.findById(res.locals.jwtPayload['uui']).catch((e) => {
         throw e;
       });
 
