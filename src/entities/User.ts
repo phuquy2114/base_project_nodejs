@@ -79,7 +79,7 @@ export class User extends BaseEntity {
 
   @Column({
     name: 'avatar',
-    nullable: false,
+    nullable: true,
   })
   avatar: string;
 
@@ -89,6 +89,13 @@ export class User extends BaseEntity {
     nullable: false,
   })
   code: string;
+
+  @Column({
+    name: 'verify',
+    nullable: true,
+    default: false
+  })
+  verifyCode: boolean;
 
   @OneToOne(() => Location, { cascade: true, primary: false })
   @JoinColumn()

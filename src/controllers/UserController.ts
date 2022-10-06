@@ -92,7 +92,7 @@ export class UserController {
 
       if (result != null) {
 
-        this.dataResponse.status = 200;
+        this.dataResponse.status = 400;
         this.dataResponse.data = {};
         if (result.usr === user.usr) {
           this.dataResponse.message = ' Username already exists ';
@@ -102,7 +102,7 @@ export class UserController {
           this.dataResponse.message = ' User already exists ';
         }
 
-        res.status(200).json(this.dataResponse);
+        res.status(400).json(this.dataResponse);
         return;
       }
 
@@ -123,6 +123,43 @@ export class UserController {
 
       this.dataResponse.status = 200;
       this.dataResponse.data = newUser;
+      this.dataResponse.message = 'Register Successfull';
+
+      res.status(200).json(this.dataResponse);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+
+  @Post('code')
+  private async checkCode(req: Request, res: Response, next: NextFunction,): Promise<void> {
+    Log.info(this.className, 'addUser', `RQ`, { req: req });
+
+    try {
+      const result: User = await this.userService.findByUserName(req.body.username).catch((e) => {
+        throw e;
+      });
+
+      if (result != null) {
+
+        this.dataResponse.status = 400;
+        this.dataResponse.data = {};
+        if (result.code !== req.body.code) {
+          this.dataResponse.message = ' Code not math';
+        } else {
+          result.verifyCode = true;
+          await result.save();
+          this.dataResponse.message = 'Register Successfull'; 
+        }
+        res.status(400).json(this.dataResponse);
+        return;
+      } else {
+        this.dataResponse.message = ' User already exists ';
+      }
+
+      this.dataResponse.status = 200;
+      this.dataResponse.data = result;
       this.dataResponse.message = 'Register Successfull';
 
       res.status(200).json(this.dataResponse);
