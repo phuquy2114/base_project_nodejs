@@ -150,7 +150,7 @@ export class UserController {
         } else {
           result.verifyCode = true;
           await result.save();
-          this.dataResponse.message = 'Register Successfull'; 
+          this.dataResponse.message = 'Register Successfull';
         }
         res.status(400).json(this.dataResponse);
         return;
@@ -163,6 +163,36 @@ export class UserController {
       this.dataResponse.message = 'Register Successfull';
 
       res.status(200).json(this.dataResponse);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  @Post('resend_code')
+  private async resendCode(req: Request, res: Response, next: NextFunction,): Promise<void> {
+    Log.info(this.className, 'addUser', `RQ`, { req: req });
+
+    try {
+      const result: User = await this.userService.findByUserName(req.body.username).catch((e) => {
+        throw e;
+      });
+
+      if (result != null) {
+
+        this.dataResponse.data = {
+          "code": result.code
+        }
+        this.dataResponse.message = 'Register Successfull';
+
+        res.status(200).json(this.dataResponse);
+        return;
+      } else {
+        this.dataResponse.message = ' User already exists ';
+      }
+
+      this.dataResponse.status = 400;
+      this.dataResponse.data = result;
+      res.status(400).json(this.dataResponse);
     } catch (e) {
       next(e);
     }
