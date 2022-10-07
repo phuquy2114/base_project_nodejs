@@ -13,7 +13,7 @@ import { NewPasswordReq } from 'src/models/NewPasswordReq';
 @Controller('api/auth')
 export class AuthController {
   private className = 'AuthController';
-  constructor(private readonly authenService: AuthenService) {}
+  constructor(private readonly authenService: AuthenService) { }
   private dataResponse: BaseResponse = new BaseResponse();
 
   @Post('login')
@@ -25,6 +25,14 @@ export class AuthController {
       const authenRes: AuthenRes = await this.authenService.login(authenReq).catch((e) => {
         throw e;
       });
+
+      if (authenRes === null) {
+        this.dataResponse.status = 200;
+        this.dataResponse.error = 102;
+        this.dataResponse.data = {};
+        this.dataResponse.message = 'You need the verify code defore login account ';
+        res.status(200).json(this.dataResponse);
+      }
 
       this.dataResponse.status = 200;
       this.dataResponse.data = authenRes;

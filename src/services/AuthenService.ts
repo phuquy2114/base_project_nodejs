@@ -12,12 +12,14 @@ import { UserRes } from 'src/models/UserRes';
 import { CodeRes } from 'src/models/CodeRes';
 import { NewPasswordReq } from 'src/models/NewPasswordReq';
 import { LocationRes } from 'src/models/LocationRes';
+import { BaseResponse } from './BaseResponse';
 
 @Service()
 export class AuthenService extends BaseService<User, UserRepository> {
   constructor(@InjectRepository(User) repository: UserRepository) {
     super(repository);
   }
+  private dataResponse: BaseResponse = new BaseResponse();
 
   public async login(authenReq: AuthenReq): Promise<AuthenRes | undefined> {
     console.log('start');
@@ -35,6 +37,10 @@ export class AuthenService extends BaseService<User, UserRepository> {
     console.log('user');
     console.log(user);
 
+    if (user.verifyCode === false) {
+      return null;
+    }
+
     if (user && user.pwd === authenReq.pwd) {
       const jwtInfo: JwtInfo = {
         uuid: user.uuid,
@@ -45,9 +51,9 @@ export class AuthenService extends BaseService<User, UserRepository> {
       const token = jwt.sign(jwtInfo, <string>process.env.JWT_SECRET, { expiresIn: process.env.TOKEN_EXPIRE });
 
       const location: LocationRes = {
-        address : user.location.address,
-        log : parseFloat(user.location.log.toString()),
-        lat : parseFloat(user.location.lat.toString()) ,
+        address: user.location.address,
+        log: parseFloat(user.location.log.toString()),
+        lat: parseFloat(user.location.lat.toString()),
       };
 
       const userResData: UserRes = {
@@ -122,7 +128,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
       }
 
       user.pwd = body.newPass;
-      await this.repository.updateNewPassword(body.username,body.newPass).catch((err) => {
+      await this.repository.updateNewPassword(body.username, body.newPass).catch((err) => {
         throw err;
       });
 
