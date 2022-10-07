@@ -143,16 +143,20 @@ export class UserController {
 
       if (result != null) {
 
-        this.dataResponse.status = 400;
+    
         this.dataResponse.data = {};
         if (result.code !== req.body.code) {
+          this.dataResponse.status = 400;
           this.dataResponse.message = ' Code not math';
+          res.status(400).json(this.dataResponse);
         } else {
+          this.dataResponse.status = 200;
           result.verifyCode = true;
           await result.save();
-          this.dataResponse.message = 'Register Successfull';
+          this.dataResponse.message = 'Code Successfull';
+          res.status(200).json(this.dataResponse);
         }
-        res.status(400).json(this.dataResponse);
+
         return;
       } else {
         this.dataResponse.message = ' User already exists ';
@@ -160,7 +164,7 @@ export class UserController {
 
       this.dataResponse.status = 200;
       this.dataResponse.data = result;
-      this.dataResponse.message = 'Register Successfull';
+      this.dataResponse.message = 'Code Successfull';
 
       res.status(200).json(this.dataResponse);
     } catch (e) {
@@ -178,11 +182,11 @@ export class UserController {
       });
 
       if (result != null) {
-
+        this.dataResponse.status = 200;
         this.dataResponse.data = {
           "code": result.code
         }
-        this.dataResponse.message = 'Register Successfull';
+        this.dataResponse.message = 'Successfull';
 
         res.status(200).json(this.dataResponse);
         return;
