@@ -37,7 +37,7 @@ class ApiServer extends Server {
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.all('/*', this.setupCORS);
     this.app.use(express.static('public', this.options));
-    this.app.use('/upload', express.static('upload'));
+    this.app.use(process.env.UPLOAD_FOLDER, express.static('upload'));
   }
 
   private async initServer(): Promise<void> {
