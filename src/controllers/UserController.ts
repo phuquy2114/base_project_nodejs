@@ -38,7 +38,7 @@ export class UserController {
     }
   }
 
-  @Get(':id')
+  @Get('userId/:id')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
   private async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'getUser', `RQ`, { req: req });
