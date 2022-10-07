@@ -143,7 +143,7 @@ export class UserController {
 
       if (result != null) {
 
-    
+
         this.dataResponse.data = {};
         if (result.code !== req.body.code) {
           this.dataResponse.status = 400;
