@@ -10,6 +10,18 @@ import Log from '../utils/Log';
 import { uploadMiddleware } from '../middleware/upload.middleware';
 import { BaseResponse } from '../services/BaseResponse';
 import { JwtInfo } from 'src/models/JwtInfo';
+import { env } from 'process';
+var nodemailler = require('nodemailer');
+
+const option = {
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASSWORD
+  }
+}
+
+var transporter = nodemailler.createTransport(option);
 
 @Service()
 @Controller('api/user')
@@ -183,6 +195,27 @@ export class UserController {
 
       if (result != null) {
         this.dataResponse.status = 200;
+        transporter.verify(function (err: any, success: any) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('Connected successfully');
+            var mail = {
+              from: process.env.EMAIL,
+              to: 'quynhanh27399@gmail.com',
+              subject: 'Mail send from nodejs',
+              text: 'Node js',
+            };
+
+            transporter.sendMail(mail, function (err: any, info: any) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("Mail sent: " + info.response);
+              }
+            });
+          }
+        })
         this.dataResponse.data = {
           "code": result.code
         }

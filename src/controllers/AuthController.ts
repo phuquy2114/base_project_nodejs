@@ -16,6 +16,7 @@ export class AuthController {
   constructor(private readonly authenService: AuthenService) { }
   private dataResponse: BaseResponse = new BaseResponse();
 
+
   @Post('login')
   private async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'register', `RQ`, { req: req });

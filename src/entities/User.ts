@@ -3,6 +3,7 @@ import { Location } from './Location';
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import { Comment } from './Comment';
+import { Model } from '../consts/Model';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -42,6 +43,21 @@ export class User extends BaseEntity {
     length: 150,
   })
   shopName: string;
+
+  @Column({
+    name: 'email',
+    nullable: true,
+    length: 150,
+  })
+  email: string;
+
+  // mode 1 = Moto, 2 = OTO
+  @Column({
+    name: 'mode',
+    nullable: true,
+    length: 150,
+  })
+  mode: Model;
 
   @Column({
     name: 'about',
