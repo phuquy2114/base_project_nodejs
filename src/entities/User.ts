@@ -47,7 +47,6 @@ export class User extends BaseEntity {
   @Column({
     name: 'email',
     nullable: true,
-    length: 150,
   })
   email: string;
 
@@ -55,7 +54,6 @@ export class User extends BaseEntity {
   @Column({
     name: 'mode',
     nullable: true,
-    length: 150,
   })
   mode: Model;
 

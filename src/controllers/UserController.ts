@@ -132,6 +132,27 @@ export class UserController {
         throw e;
       });
 
+      transporter.verify(function (err: any, success: any) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('Connected successfully');
+          var mail = {
+            from: process.env.EMAIL,
+            to: newUser.email.toString(),
+            subject: 'Mail send from nodejs',
+            text: teamplateVerfification(newUser.fullName, newUser.code),
+          };
+
+          transporter.sendMail(mail, function (err: any, info: any) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("Mail sent: " + info.response);
+            }
+          });
+        }
+      })
 
       this.dataResponse.status = 200;
       this.dataResponse.data = newUser;
@@ -202,9 +223,9 @@ export class UserController {
             console.log('Connected successfully');
             var mail = {
               from: process.env.EMAIL,
-              to: 'quynhanh27399@gmail.com',
+              to: result.email,
               subject: 'Mail send from nodejs',
-              text: 'Node js',
+              text: teamplateVerfification(result.fullName, result.code),
             };
 
             transporter.sendMail(mail, function (err: any, info: any) {
@@ -297,3 +318,19 @@ export class UserController {
     }
   }
 }
+
+export default function teamplateVerfification(fullName: string, code: string): string {
+  return ' Hi ${fullName} !'
+  
+  + 'Your verification code is ${code}.'
+  
+  + 'Enter this code in our [SOS DRIVER] to activate your account.'
+  
+  + 'Click here [open code in app] to open the [app/portal landing page].'
+  
+  + 'If you have any questions, send us an email [serveruits@gmail.com to your support team].'
+  
+  + 'We’re glad you’re here!'
+  + 'The [SOS DRIVER] team ;'
+}
+
