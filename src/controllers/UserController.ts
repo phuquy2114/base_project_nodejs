@@ -162,7 +162,7 @@ export class UserController {
       }
 
       this.dataResponse.status = 200;
-      this.dataResponse.data = {};
+      this.dataResponse.data = newUser;
       this.dataResponse.message = 'Register Successfull';
 
       res.status(200).json(this.dataResponse);
