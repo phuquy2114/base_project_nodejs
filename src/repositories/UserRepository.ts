@@ -31,7 +31,16 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder()
       .update(User)
       .set({
-        pwd: "pwd",
+        pwd: pwd,
+      })
+      .where('usr = :usr', { usr: usr }).execute();
+  }
+
+  updateCodeUser(usr: string, code: string): Promise<UpdateResult> {
+    return this.createQueryBuilder()
+      .update(User)
+      .set({
+        code: code,
       })
       .where('usr = :usr', { usr: usr }).execute();
   }

@@ -133,6 +133,11 @@ export class UserController {
       });
 
       if (newUser.email !== null) {
+        
+        var codeRan = Math.floor(1000 + Math.random() * 9000);
+        result.code = codeRan.toString();
+        await result.save();
+
         transporter.verify(function (err: any, success: any) {
           if (err) {
             console.log(err);
@@ -217,6 +222,10 @@ export class UserController {
       });
 
       if (result != null) {
+        var codeRan = Math.floor(1000 + Math.random() * 9000);
+        result.code = codeRan.toString();
+        await result.save();
+
         this.dataResponse.status = 200;
         
       if (result.email !== null) {
