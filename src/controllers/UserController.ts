@@ -140,8 +140,8 @@ export class UserController {
           var mail = {
             from: process.env.EMAIL,
             to: newUser.email.toString(),
-            subject: 'Mail send from nodejs',
-            text: teamplateVerfification(newUser.fullName, newUser.code),
+            subject: 'Verify your SOSDriver ID email address',
+            text: teamplateVerfification(newUser.lastName, newUser.code),
           };
 
           transporter.sendMail(mail, function (err: any, info: any) {
@@ -155,7 +155,7 @@ export class UserController {
       })
 
       this.dataResponse.status = 200;
-      this.dataResponse.data = newUser;
+      this.dataResponse.data = {};
       this.dataResponse.message = 'Register Successfull';
 
       res.status(200).json(this.dataResponse);
@@ -224,8 +224,8 @@ export class UserController {
             var mail = {
               from: process.env.EMAIL,
               to: result.email,
-              subject: 'Mail send from nodejs',
-              text: teamplateVerfification(result.fullName, result.code),
+              subject: 'Verify your SOSDriver ID email address',
+              text: teamplateVerfification(result.lastName, result.code),
             };
 
             transporter.sendMail(mail, function (err: any, info: any) {
@@ -320,17 +320,17 @@ export class UserController {
 }
 
 export default function teamplateVerfification(fullName: string, code: string): string {
-  return ' Hi ${fullName} !'
-  
-  + 'Your verification code is ${code}.'
-  
-  + 'Enter this code in our [SOS DRIVER] to activate your account.'
-  
-  + 'Click here [open code in app] to open the [app/portal landing page].'
-  
-  + 'If you have any questions, send us an email [serveruits@gmail.com to your support team].'
-  
-  + 'We’re glad you’re here!'
-  + 'The [SOS DRIVER] team ;'
+  return ` Hi  ${fullName} \n\t`
+
+    + `\n Your verification code is  ${code} \n\t`
+
+    + '\n Enter this code in our [SOS DRIVER] to activate your account.\n\t '
+
+    + '\n Click here [open code in app] to open the [app/portal landing page].\n\t '
+
+    + '\n If you have any questions, send us an email [serveruits@gmail.com to your support team].\n\t '
+
+    + '\n We’re glad you’re here! \n\t '
+    + '\n The [SOS DRIVER] team \n\t ';
 }
 
