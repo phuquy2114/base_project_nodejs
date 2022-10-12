@@ -51,13 +51,12 @@ export class AuthenService extends BaseService<User, UserRepository> {
 
       const token = jwt.sign(jwtInfo, <string>process.env.JWT_SECRET, { expiresIn: process.env.TOKEN_EXPIRE });
 
-      console.log('a');
       const location: LocationRes = {
         address: user.location.address,
         log: parseFloat(user.location.log?.toString() || null),
         lat: parseFloat(user.location.lat?.toString() || null),
       };
-      console.log('b');
+   
       const userResData: UserRes = {
         id: user.uuid,
         usr: user.usr,
