@@ -99,6 +99,10 @@ export class AuthenService extends BaseService<User, UserRepository> {
     console.log('user');
     console.log(user);
 
+    var codeRan = Math.floor(1000 + Math.random() * 9000);
+    user.code = codeRan.toString();
+    await user.save();
+
     if (user) {
       const code: CodeRes = {
         code: user.code

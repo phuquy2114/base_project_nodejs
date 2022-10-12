@@ -133,7 +133,7 @@ export class UserController {
       });
 
       if (newUser.email !== null) {
-        
+
         var codeRan = Math.floor(1000 + Math.random() * 9000);
         result.code = codeRan.toString();
         await result.save();
@@ -182,8 +182,6 @@ export class UserController {
       });
 
       if (result != null) {
-
-
         this.dataResponse.data = {};
         if (result.code !== req.body.code) {
           this.dataResponse.status = 400;
@@ -227,30 +225,30 @@ export class UserController {
         await result.save();
 
         this.dataResponse.status = 200;
-        
-      if (result.email !== null) {
-        transporter.verify(function (err: any, success: any) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('Connected successfully');
-            var mail = {
-              from: process.env.EMAIL,
-              to: result.email.toString(),
-              subject: 'Verify your SOSDriver ID email address',
-              text: teamplateVerfification(result.lastName, result.code),
-            };
 
-            transporter.sendMail(mail, function (err: any, info: any) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log("Mail sent: " + info.response);
-              }
-            });
-          }
-        })
-      }
+        if (result.email !== null) {
+          transporter.verify(function (err: any, success: any) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log('Connected successfully');
+              var mail = {
+                from: process.env.EMAIL,
+                to: result.email.toString(),
+                subject: 'Verify your SOSDriver ID email address',
+                text: teamplateVerfification(result.lastName, result.code),
+              };
+
+              transporter.sendMail(mail, function (err: any, info: any) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log("Mail sent: " + info.response);
+                }
+              });
+            }
+          })
+        }
         this.dataResponse.data = {
           "code": result.code
         }
