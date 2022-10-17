@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Controller, Middleware, Get, Put, Post } from '@overnightjs/core';
+import { Controller, Middleware, Get, Put, Post, Delete } from '@overnightjs/core';
 import { checkJwt } from '../middleware/checkJwt.middleware';
 import { checkRole } from '../middleware/checkRole.middleware';
 import { UserService } from '../services/UserService';
@@ -10,6 +10,8 @@ import Log from '../utils/Log';
 import { uploadMiddleware } from '../middleware/upload.middleware';
 import { BaseResponse } from '../services/BaseResponse';
 import { JwtInfo } from 'src/models/JwtInfo';
+import { CommentReq } from '../models/CommentReq';
+import { Comment } from '../entities/Comment';
 
 @Service()
 @Controller('api/comment')
@@ -58,52 +60,44 @@ export class CommentController {
     }
   }
 
-  @Post('register')
+  @Post('add')
   @Middleware([uploadMiddleware('file', 10)]) // 10 : file size 
-  private async addUser(req: Request, res: Response, next: NextFunction,): Promise<void> {
-    Log.info(this.className, 'addUser', `RQ`, { req: req });
-
+  private async addComment(req: Request, res: Response, next: NextFunction,): Promise<void> {
+    Log.info(this.className, 'addComment', `RQ`, { req: req });
+    const jwtInfo = <JwtInfo>res.locals.jwtPayload;
     try {
 
-      const user: User = JSON.parse(req.body.jsonData) as User;
+      const comment: CommentReq = JSON.parse(req.body) as CommentReq;
 
-      const result: User = await this.userService.findByUserName(user.usr).catch((e) => {
+      const user: User = await this.userService.findById(jwtInfo.uuid).catch((e) => {
         throw e;
       });
 
-      if (result != null) {
-
-        this.dataResponse.status = 200;
-        this.dataResponse.data = {};
-        if (result.usr === user.usr) {
-          this.dataResponse.message = ' Username already exists ';
-        } else if (result.phone === user.phone) {
-          this.dataResponse.message = ' Phone already exists ';
-        } else {
-          this.dataResponse.message = ' User already exists ';
-        }
-
-        res.status(200).json(this.dataResponse);
-        return;
-      }
-
-      var val = Math.floor(1000 + Math.random() * 9000);
+      const shop: User = await this.userService.findById(comment.uuidShop).catch((e) => {
+        throw e;
+      });
 
 
       var avatar = `${process.env.UPLOAD_FOLDER}/${req.file.filename}`
-      user.code = val.toString();
-      user.avatar = avatar.toString();
-
-      console.log(val);
       console.log(avatar);
 
-      const newUser: User = await this.userService.store(user).catch((e) => {
-        throw e;
-      });
+      const comments = new Comment();
+      comments.comment = comment.comment;
+      comments.rate = comment.rate;
+      comments.fileImage = avatar;
+      comments.userComment = user;
 
+      shop.comments = [comments];
+
+      console.log(comments);
+      console.log(shop);
+      // const newUser: User = await this.userService.store(user).catch((e) => {
+      //   throw e;
+      // });
+      await shop.save();
 
       this.dataResponse.status = 200;
-      this.dataResponse.data = newUser;
+      this.dataResponse.data = {};
       this.dataResponse.message = 'Register Successfull';
 
       res.status(200).json(this.dataResponse);
@@ -112,41 +106,29 @@ export class CommentController {
     }
   }
 
-  @Post('change_password')
+  @Delete('delete/:id')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }])])
-  private async changePassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+  private async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'updateUser', `RQ`, { req: req });
     const jwtInfo = <JwtInfo>res.locals.jwtPayload;
     try {
-      console.log(req.body.oldPass);
-      console.log(req.body.newPass);
-      console.log(req.body.confirmPass);
-      console.log(jwtInfo);
+      const uuidShop: number = Number.parseInt(req.params.id, 0);
+      const commentID: number = Number.parseInt(req.params.commentId, 0);
+      console.log(uuidShop);
 
-      const user: User | undefined = await this.userService.findById(res.locals.jwtPayload['uuid']).catch((err) => {
+      const shop: User | undefined = await this.userService.findById(uuidShop).catch((err) => {
         throw err;
       });
 
-      if (req.body.oldPass == user.pwd) {
-        user.pwd = req.body.newPass;
-        const newUser: User = await this.userService.update(user.uuid, user).catch((e) => {
-          throw e;
-        });
+      shop.comments = shop.comments.filter(cm => {
+        return cm.uuid !== commentID;
+      });
+      await shop.save();
 
-        this.dataResponse.status = 200;
-        this.dataResponse.data = newUser;
-        this.dataResponse.message = 'Update the successfull';
-
-        res.status(200).json(this.dataResponse);
-      } else {
-        this.dataResponse.status = 400;
-        this.dataResponse.data = {};
-        this.dataResponse.error = 101;
-        this.dataResponse.message = 'Incorrect the old Password';
-
-        res.status(200).json(this.dataResponse);
-      }
-
+      this.dataResponse.status = 200;
+      this.dataResponse.data = {};
+      this.dataResponse.message = 'Commemt deleted - the successfull';
+      res.status(200).json(this.dataResponse);
     } catch (e) {
       next(e);
     }

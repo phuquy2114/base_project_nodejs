@@ -1,6 +1,6 @@
 import { Roles } from '../consts/Roles';
 import { Location } from './Location';
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import { Comment } from './Comment';
 import { Model } from '../consts/Model';
@@ -115,7 +115,7 @@ export class User extends BaseEntity {
   @JoinColumn()
   location: Location;
 
-  @ManyToMany(() => Comment, { cascade: true, nullable: false })
+  @OneToMany(() => Comment, (commet) => commet.userComment)
   @JoinTable()
   comments: Comment[];
 
