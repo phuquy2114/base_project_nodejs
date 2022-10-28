@@ -17,7 +17,7 @@ export class Comment extends BaseEntity {
     @Column()
     comment: string;
 
-    @ManyToOne(() => User, user => user.uuid)
+    @ManyToOne(() => User, user => user.comments)
     author: User;
 
     @CreateDateColumn({

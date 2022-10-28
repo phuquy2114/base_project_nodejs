@@ -116,7 +116,6 @@ export class User extends BaseEntity {
   location: Location;
 
   @OneToMany(() => Comment, (commet) => commet.author)
-  @JoinTable()
   comments: Comment[];
 
   @CreateDateColumn({

@@ -85,6 +85,8 @@ export class CommentController {
       cm.fileImage = avatar;
       cm.author = user;
 
+      await cm.save();
+
       shop.comments = [cm];
 
       await shop.save();
