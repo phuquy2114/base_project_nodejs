@@ -42,17 +42,17 @@ export class CommentController {
 
   @Get(':id')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
-  private async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  private async getCommentListOfId(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'getUser', `RQ`, { req: req });
 
     try {
       const id: string = req.params.id;
-      const item: User = await this.userService.findById(id).catch((e) => {
+      const item: User = await this.userService.findById(id, { relations: ['comments'] }).catch((e) => {
         throw e;
       });
 
       this.dataResponse.status = 200;
-      this.dataResponse.data = item;
+      this.dataResponse.data = item.comments;
       this.dataResponse.message = 'Successfull';
       res.status(200).json(this.dataResponse);
     } catch (e) {
@@ -61,14 +61,13 @@ export class CommentController {
   }
 
   @Post('add')
-  @Middleware([uploadMiddleware('file', 10)]) // 10 : file size 
+  @Middleware([checkJwt, uploadMiddleware('file', 10)]) // 10 : file size 
   private async addComment(req: Request, res: Response, next: NextFunction,): Promise<void> {
     Log.info(this.className, 'addComment', `RQ`, { req: req });
     const jwtInfo = <JwtInfo>res.locals.jwtPayload;
+    console.log(jwtInfo);
     try {
-
-      const comment: CommentReq = JSON.parse(req.body) as CommentReq;
-
+      const comment: CommentReq = JSON.parse(req.body.data) as CommentReq;
       const user: User = await this.userService.findById(jwtInfo.uuid).catch((e) => {
         throw e;
       });
@@ -77,28 +76,22 @@ export class CommentController {
         throw e;
       });
 
-
       var avatar = `${process.env.UPLOAD_FOLDER}/${req.file.filename}`
       console.log(avatar);
 
-      const comments = new Comment();
-      comments.comment = comment.comment;
-      comments.rate = comment.rate;
-      comments.fileImage = avatar;
-      comments.userComment = user;
+      const cm = new Comment();
+      cm.comment = comment.comment;
+      cm.rate = comment.rate;
+      cm.fileImage = avatar;
+      cm.author = user;
 
-      shop.comments = [comments];
+      shop.comments = [cm];
 
-      console.log(comments);
-      console.log(shop);
-      // const newUser: User = await this.userService.store(user).catch((e) => {
-      //   throw e;
-      // });
       await shop.save();
 
       this.dataResponse.status = 200;
       this.dataResponse.data = {};
-      this.dataResponse.message = 'Register Successfull';
+      this.dataResponse.message = 'Comment Successfull';
 
       res.status(200).json(this.dataResponse);
     } catch (e) {
