@@ -47,7 +47,7 @@ export class CommentController {
 
     try {
       const id: string = req.params.id;
-      const item: User = await this.userService.findById(id, { relations: ['comments'] }).catch((e) => {
+      const item: User = await this.userService.findById(id, { relations: ['comments'], order: { updatedAt: 'DESC' } }).catch((e) => {
         throw e;
       });
 
@@ -101,23 +101,26 @@ export class CommentController {
     }
   }
 
-  @Delete('delete/:id')
-  @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }])])
+  @Delete('delete/:shopId/comment/:commentId')
+  @Middleware([checkJwt])
   private async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'updateUser', `RQ`, { req: req });
     const jwtInfo = <JwtInfo>res.locals.jwtPayload;
     try {
-      const uuidShop: number = Number.parseInt(req.params.id, 0);
+      const uuidShop: number = Number.parseInt(req.params.shopId, 0);
       const commentID: number = Number.parseInt(req.params.commentId, 0);
-      console.log(uuidShop);
 
-      const shop: User | undefined = await this.userService.findById(uuidShop).catch((err) => {
+      console.log(uuidShop);
+      console.log(commentID);
+
+      const shop: User | undefined = await this.userService.findById(uuidShop, { relations: ['comments'] }).catch((err) => {
         throw err;
       });
 
       shop.comments = shop.comments.filter(cm => {
         return cm.uuid !== commentID;
       });
+
       await shop.save();
 
       this.dataResponse.status = 200;
@@ -129,23 +132,35 @@ export class CommentController {
     }
   }
 
-  @Put('update')
+  @Put('update/:shopId/comment/:commentId')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }])])
-  private async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  private async updateComment(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'updateUser', `RQ`, { req: req });
 
     try {
-      console.log(req.body.firstName);
-      console.log(req.body.lastName);
-      console.log(req.body.avatar);
-      console.log(req.body.phone);
-      const user: User = <User>req.body;
 
-      const newUser: User = await this.userService.update(user.usr, user).catch((e) => {
-        throw e;
+      const comment: CommentReq = req.body;
+
+      const uuidShop: number = Number.parseInt(req.params.shopId, 0);
+      const commentID: number = Number.parseInt(req.params.commentId, 0);
+
+
+      const shop: User | undefined = await this.userService.findById(uuidShop, { relations: ['comments'] }).catch((err) => {
+        throw err;
       });
 
-      res.status(200).json({ data: newUser });
+      const cm = shop.comments.find(x => x.uuid === commentID) as Comment;
+      cm.comment = comment.comment;
+      cm.rate = comment.rate;
+      
+      await cm.save();
+     
+  
+
+      this.dataResponse.status = 200;
+      this.dataResponse.data = {};
+      this.dataResponse.message = 'Updated Comment successfull';
+      res.status(200).json(this.dataResponse);
     } catch (e) {
       next(e);
     }
