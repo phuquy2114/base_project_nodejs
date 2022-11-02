@@ -29,10 +29,21 @@ export class AuthenService extends BaseService<User, UserRepository> {
       throw new AppException('login_failed', 'usr or pwd empty');
     }
 
-    console.log('getByUsername');
-    const user: User | undefined = await this.repository.getByUsername(authenReq.usr).catch((err) => {
-      throw err;
-    });
+  var user: User ;
+    try {
+      console.log('getByUsername');
+      user = await this.repository.getByUsername(authenReq.usr);
+      if (user == null) {
+        console.log('getByEmail');
+        user = await this.repository.getByEmail(authenReq.usr);
+      }
+      if (user == null) {
+        console.log('getByPhone');
+        user = await this.repository.getByPhone(authenReq.usr);
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
     console.log('user');
     console.log(user);
@@ -56,7 +67,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
         log: parseFloat(user.location.log?.toString() || null),
         lat: parseFloat(user.location.lat?.toString() || null),
       };
-   
+
       const userResData: UserRes = {
         id: user.uuid,
         usr: user.usr,

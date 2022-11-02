@@ -27,6 +27,18 @@ export class UserRepository extends Repository<User> {
       .where('usr = :usr', { usr: usr }).getOne();
   }
 
+  getByEmail(email: string): Promise<User> {
+    return this.createQueryBuilder('q')
+      .leftJoinAndSelect("q.location", "location")
+      .where('email = :email', { email: email }).getOne();
+  }
+
+  getByPhone(phone: string): Promise<User> {
+    return this.createQueryBuilder('q')
+      .leftJoinAndSelect("q.location", "location")
+      .where('phone = :phone', { phone: phone }).getOne();
+  }
+
   updateNewPassword(usr: string, pwd: string): Promise<UpdateResult> {
     return this.createQueryBuilder()
       .update(User)
@@ -48,7 +60,7 @@ export class UserRepository extends Repository<User> {
   getRangeServices(lat: number, long: number, range: number = 1000): Promise<User[]> {
     return this.createQueryBuilder('l')
       .leftJoinAndSelect("l.location", "location")
-      .select(['ST_Distance(location, ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(location)))/1000 AS distance' ])
+      .select(['ST_Distance(location, ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(location)))/1000 AS distance'])
       .where('ST_DWithin(location, ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(location)) ,:range)', { role: Roles.CUSTOMER })
       .orderBy("distance", "ASC")
       .setParameters({
