@@ -45,8 +45,7 @@ export class User extends BaseEntity {
   shopName: string;
 
   @Column({
-    name: 'email',
-    nullable: true,
+    name: 'email'
   })
   email: string;
 
