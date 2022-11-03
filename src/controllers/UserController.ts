@@ -98,9 +98,21 @@ export class UserController {
 
       const user: User = JSON.parse(req.body.jsonData) as User;
 
-      const result: User = await this.userService.findByUserName(user.usr).catch((e) => {
-        throw e;
-      });
+      var result: User;
+      try {
+        console.log('getByUsername');
+        result = await this.userService.findByUserName(user.usr);
+        if (result == null) {
+          console.log('getByEmail');
+          result = await this.userService.findByEmail(user.email);
+        }
+        if (result == null) {
+          console.log('getByPhone');
+          result = await this.userService.findByPhone(user.phone.replace(" ", ""));
+        }
+      } catch (error) {
+        console.log(error);
+      }
 
       if (result != null) {
 
@@ -120,6 +132,8 @@ export class UserController {
 
       var val = Math.floor(1000 + Math.random() * 9000);
 
+      // replace 
+      user.phone.replace(" ", "");
 
       var avatar = `${process.env.UPLOAD_FOLDER}/${req.file.filename}`
       user.code = val.toString();

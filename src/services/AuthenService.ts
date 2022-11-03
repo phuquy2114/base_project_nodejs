@@ -39,7 +39,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
       }
       if (user == null) {
         console.log('getByPhone');
-        user = await this.repository.getByPhone(authenReq.usr);
+        user = await this.repository.getByPhone(authenReq.usr.replace(" ",""));
       }
     } catch (error) {
       console.log(error);
