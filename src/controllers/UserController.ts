@@ -147,27 +147,32 @@ export class UserController {
       });
       // await result.save();
 
-      transporter.verify(function (err: any, success: any) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log('Connected successfully');
-          var mail = {
-            from: process.env.EMAIL,
-            to: newUser.email.toString(),
-            subject: 'Verify your SOSDriver ID email address',
-            text: teamplateVerfification(newUser.lastName, newUser.code),
-          };
+      try {
+        transporter.verify(function (err: any, success: any) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('Connected successfully');
+            var mail = {
+              from: process.env.EMAIL,
+              to: newUser.email.toString(),
+              subject: 'Verify your SOSDriver ID email address',
+              text: teamplateVerfification(newUser.lastName, newUser.code),
+            };
 
-          transporter.sendMail(mail, function (err: any, info: any) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("Mail sent: " + info.response);
-            }
-          });
-        }
-      });
+            transporter.sendMail(mail, function (err: any, info: any) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("Mail sent: " + info.response);
+              }
+            });
+          }
+        });
+      } catch (e) {
+
+      }
+
 
       this.dataResponse.status = 200;
       this.dataResponse.data = newUser;
@@ -235,27 +240,30 @@ export class UserController {
         this.dataResponse.status = 200;
 
         if (result.email !== null) {
-          transporter.verify(function (err: any, success: any) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log('Connected successfully');
-              var mail = {
-                from: process.env.EMAIL,
-                to: result.email.toString(),
-                subject: 'Verify your SOSDriver ID email address',
-                text: teamplateVerfification(result.lastName, result.code),
-              };
+          try {
+            transporter.verify(function (err: any, success: any) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log('Connected successfully');
+                var mail = {
+                  from: process.env.EMAIL,
+                  to: result.email.toString(),
+                  subject: 'Verify your SOSDriver ID email address',
+                  text: teamplateVerfification(result.lastName, result.code),
+                };
 
-              transporter.sendMail(mail, function (err: any, info: any) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log("Mail sent: " + info.response);
-                }
-              });
-            }
-          })
+                transporter.sendMail(mail, function (err: any, info: any) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log("Mail sent: " + info.response);
+                  }
+                });
+
+              }
+            })
+          } catch (e) { }
         }
         this.dataResponse.data = {
           "code": result.code

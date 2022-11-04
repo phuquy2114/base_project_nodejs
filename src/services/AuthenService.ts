@@ -40,7 +40,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
       throw new AppException('login_failed', 'usr or pwd empty');
     }
 
-  var user: User ;
+    var user: User;
     try {
       console.log('getByUsername');
       user = await this.repository.getByUsername(authenReq.usr);
@@ -50,7 +50,7 @@ export class AuthenService extends BaseService<User, UserRepository> {
       }
       if (user == null) {
         console.log('getByPhone');
-        user = await this.repository.getByPhone(authenReq.usr.replace(" ",""));
+        user = await this.repository.getByPhone(authenReq.usr.replace(" ", ""));
       }
     } catch (error) {
       console.log(error);
@@ -125,27 +125,30 @@ export class AuthenService extends BaseService<User, UserRepository> {
     user.code = codeRan.toString();
     await user.save();
 
-    transporter.verify(function (err: any, success: any) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('Connected successfully');
-        var mail = {
-          from: process.env.EMAIL,
-          to: user.email.toString(),
-          subject: 'Verify your SOSDriver ID email address',
-          text: teamplateVerfification(user.lastName, user.code),
-        };
+    try {
 
-        transporter.sendMail(mail, function (err: any, info: any) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("Mail sent: " + info.response);
-          }
-        });
-      }
-    });
+      transporter.verify(function (err: any, success: any) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('Connected successfully');
+          var mail = {
+            from: process.env.EMAIL,
+            to: user.email.toString(),
+            subject: 'Verify your SOSDriver ID email address',
+            text: teamplateVerfification(user.lastName, user.code),
+          };
+
+          transporter.sendMail(mail, function (err: any, info: any) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("Mail sent: " + info.response);
+            }
+          });
+        }
+      });
+    } catch (e) { }
 
     if (user) {
       const code: CodeRes = {
