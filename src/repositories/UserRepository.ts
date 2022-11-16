@@ -57,6 +57,17 @@ export class UserRepository extends Repository<User> {
       .where('usr = :usr', { usr: usr }).execute();
   }
 
+  updateUser(usr: string, firstName: string, lastName: string, phone: string): Promise<UpdateResult> {
+    return this.createQueryBuilder()
+      .update(User)
+      .set({
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+      })
+      .where('usr = :usr', { usr: usr }).execute();
+  }
+
   getRangeServices(lat: number, long: number, range: number = 1000): Promise<User[]> {
     return this.createQueryBuilder('l')
       .leftJoinAndSelect("l.location", "location")

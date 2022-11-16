@@ -332,14 +332,45 @@ export class UserController {
     try {
       console.log(req.body.firstName);
       console.log(req.body.lastName);
-      console.log(req.body.avatar);
       console.log(req.body.phone);
+      console.log(req.body.usr);
+      console.log(req.body.location);
       const user: User = <User>req.body;
-
-      const newUser: User = await this.userService.update(user.usr, user).catch((e) => {
+      console.log(user);
+      const newUser: User = await this.userService.findById(res.locals.jwtPayload['uuid']).catch((e) => {
         throw e;
       });
+      newUser.firstName = user.firstName;
+      newUser.lastName = user.lastName;
+      newUser.phone = user.phone;
+      newUser.location = user.location;
 
+      var result: User;
+      try {
+          console.log('getByPhone');
+          result = await this.userService.findByPhone(user.phone.replace(" ", ""));
+        
+      } catch (error) {
+        console.log(error);
+      }
+
+      if (result != null) {
+
+        this.dataResponse.status = 400;
+        this.dataResponse.data = {};
+        if (result.usr === user.usr) {
+          this.dataResponse.message = ' Username already exists ';
+        } else if (result.phone === user.phone) {
+          this.dataResponse.message = ' Phone already exists ';
+        } else {
+          this.dataResponse.message = ' User already exists ';
+        }
+
+        res.status(400).json(this.dataResponse);
+        return;
+      }
+
+      await newUser.save();
       res.status(200).json({ data: newUser });
     } catch (e) {
       next(e);
