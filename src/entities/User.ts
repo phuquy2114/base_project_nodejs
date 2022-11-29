@@ -23,41 +23,40 @@ export class User extends BaseEntity {
   })
   pwd: string;
 
-  @Column({
+  @Column("text",{
     name: 'first_name',
     nullable: false,
-    length: 150
   })
   firstName: string;
 
-  @Column({
+  @Column("text",{
     name: 'last_name',
     nullable: false,
-    length: 150
   })
   lastName: string;
 
-  @Column({
+  @Column("text", {
     name: 'shop',
     nullable: true,
-    length: 150,
   })
   shopName: string;
 
   @Column({
     name: 'email',
-    nullable: true,
+    nullable: false,
   })
   email: string;
 
-  // mode 1 = Moto, 2 = OTO
+  // NONE = 0,
+  // OTO = 1,
+  // MOTO = 2,
   @Column({
     name: 'mode',
     nullable: true,
   })
   mode: Model;
 
-  @Column({
+  @Column("text", {
     name: 'about',
     nullable: true,
   })

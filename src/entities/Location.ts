@@ -20,10 +20,9 @@ export class Location extends BaseEntity {
   })
   log: number;
 
-  @Column({
+  @Column("text", {
     name: 'address',
     nullable: false,
-    length: 150
   })
   address: string;
 

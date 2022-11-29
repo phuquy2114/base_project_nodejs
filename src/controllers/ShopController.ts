@@ -99,12 +99,16 @@ export class ShopController {
     Log.info(this.className, 'addUser', `RQ`, { req: req });
 
     try {
+      console.log("avatar1111114444444444");
 
       const user: User = JSON.parse(req.body.jsonData) as User;
 
+      console.log("avatar111111");
       const result: User = await this.userService.findByUserName(user.usr).catch((e) => {
         throw e;
       });
+
+      console.log("avatar");
 
       if (result != null) {
 
