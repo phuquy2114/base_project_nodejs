@@ -119,7 +119,7 @@ export class ShopController {
         } else if (result.phone === user.phone) {
           this.dataResponse.message = ' Phone already exists ';
         } else {
-          this.dataResponse.message = ' User already exists ';
+          this.dataResponse.message = ' Email already exists ';
         }
 
         res.status(200).json(this.dataResponse);
