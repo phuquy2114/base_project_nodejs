@@ -5,3 +5,4 @@ export * from './OneToOneController';
 export * from './UploadController';
 export * from './CommentControllerr';
 export * from './ShopController';
+export * from './NewsArticlesController';
