@@ -176,8 +176,8 @@ export class AuthenService extends BaseService<User, UserRepository> {
     });
 
     if (user) {
-      if (body.code === user.code) {
-        throw new AppException('login_failed', 'Code not math');
+      if (body.code.toString() !== user.code.toString()) {
+        throw new AppException('Code not math', 'Code not math');
       }
 
       user.pwd = body.newPass;

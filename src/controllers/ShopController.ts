@@ -39,7 +39,7 @@ export class ShopController {
   }
 
   @Get('nearby_shop')
-  @Middleware([checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
+  @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])
   private async nearByShop(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'listUser', `RQ`, { req: req });
 
