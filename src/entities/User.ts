@@ -3,6 +3,7 @@ import { Location } from './Location';
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import { Comment } from './Comment';
+import { Notification } from './Notification';
 import { Model } from '../consts/Model';
 
 @Entity({ name: 'users' })
@@ -116,6 +117,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Comment, (commet) => commet.author)
   comments: Comment[];
+
+  @OneToMany(() => Notification, (notifi) => notifi.author)
+  notification: Notification[];
 
   @CreateDateColumn({
     name: 'created_at',

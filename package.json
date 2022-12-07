@@ -27,6 +27,7 @@
     "@types/rimraf": "^3.0.0",
     "class-transformer": "^0.4.0",
     "dotenv-webpack": "^7.0.3",
+    "fcm-node": "^1.6.1",
     "geojson": "^0.5.0",
     "helmet": "^4.6.0",
     "injection-js": "^2.4.0",
