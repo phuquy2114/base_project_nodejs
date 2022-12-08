@@ -7,11 +7,7 @@ import { User } from '../entities/User';
 import { Roles } from '../consts/Roles';
 import { Service } from 'typedi';
 import Log from '../utils/Log';
-import { uploadMiddleware } from '../middleware/upload.middleware';
 import { BaseResponse } from '../services/BaseResponse';
-import { JwtInfo } from 'src/models/JwtInfo';
-import { CommentReq } from '../models/CommentReq';
-import { Comment } from '../entities/Comment';
 var FCM = require('fcm-node');
 var serverKey = 'YOURSERVERKEYHERE'; //put your server key here
 var fcm = new FCM(serverKey);
@@ -49,8 +45,9 @@ export class NotificationController {
     Log.info(this.className, 'addComment', `RQ`, { req: req });
 
     try {
-      const topicName = 'some-topic-name';
-      const deviceTokens = [ 'token_1', 'token_2' ];
+      const topicName = 'push_message';
+      const deviceTokens: string[] = [];
+      deviceTokens.push()
       var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
         to: deviceTokens,
         collapse_key: 'your_collapse_key',
@@ -61,8 +58,8 @@ export class NotificationController {
         },
 
         data: {  //you can send only notification or only data(or include both)
-          my_key: 'my value',
-          my_another_key: 'my another value'
+          title: 'Đỗ Phú Quý',
+          description: 'Phu Quy very handsome '
         }
       };
 
@@ -76,7 +73,7 @@ export class NotificationController {
 
       this.dataResponse.status = 200;
       this.dataResponse.data = {};
-      this.dataResponse.message = 'Comment Successfull';
+      this.dataResponse.message = 'FCM Successfull';
 
       res.status(200).json(this.dataResponse);
     } catch (e) {
