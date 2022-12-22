@@ -345,31 +345,6 @@ export class UserController {
       newUser.phone = user.phone;
       newUser.location = user.location;
 
-      var result: User;
-      try {
-          console.log('getByPhone');
-          result = await this.userService.findByPhone(user.phone.replace(" ", ""));
-        
-      } catch (error) {
-        console.log(error);
-      }
-
-      if (result != null) {
-
-        this.dataResponse.status = 400;
-        this.dataResponse.data = {};
-        if (result.usr === user.usr) {
-          this.dataResponse.message = ' Username already exists ';
-        } else if (result.phone === user.phone) {
-          this.dataResponse.message = ' Phone already exists ';
-        } else {
-          this.dataResponse.message = ' User already exists ';
-        }
-
-        res.status(400).json(this.dataResponse);
-        return;
-      }
-
       await newUser.save();
       res.status(200).json({ data: newUser });
     } catch (e) {
