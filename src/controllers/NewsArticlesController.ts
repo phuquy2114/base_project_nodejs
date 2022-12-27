@@ -8,7 +8,7 @@ import Log from '../utils/Log';
 import { uploadMiddleware } from '../middleware/upload.middleware';
 import { BaseResponse } from '../services/BaseResponse';
 import { NewsArticles } from '../entities/NewsArticles';
-import { ArticlesService } from '../services/NewsArticleService';
+import { NewsArticleService } from '../services/NewsArticleService';
 
 @Service()
 @Controller('api/news_articles')
@@ -16,7 +16,7 @@ export class NewsArticlesController {
 
   private dataResponse: BaseResponse = new BaseResponse();
   private className = 'NewsArticlesController';
-  constructor(private readonly articlesService: ArticlesService) { }
+  constructor(private readonly articlesService: NewsArticleService) { }
 
   @Get('list_video')
   @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }, { role: Roles.CUSTOMER }])])

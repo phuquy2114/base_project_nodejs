@@ -42,11 +42,12 @@ export class NotificationController {
   @Post('push')
   @Middleware([])
   private async pushNotification(req: Request, res: Response, next: NextFunction,): Promise<void> {
-    Log.info(this.className, 'addComment', `RQ`, { req: req });
+    Log.info(this.className, 'pushNotification', `RQ`, { req: req });
 
     try {
-
-      const notif: Notification = JSON.parse(req.body) as Notification;
+      console.log(req.body);
+      const notif: Notification = req.body as Notification;
+      console.log(notif);
       const noti: Notification = await this.notifcationService.store(notif).catch((e) => {
         throw e;
       });

@@ -1,4 +1,4 @@
-import { User } from '../entities/User';
+
 import { NewsArticleRepository } from '../repositories/NewsArticleRepository';
 import { BaseService } from './BaseService';
 import { Service } from 'typedi';
@@ -6,7 +6,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { NewsArticles } from '../entities/NewsArticles';
 
 @Service()
-export class ArticlesService extends BaseService<NewsArticles, NewsArticleRepository> {
+export class NewsArticleService extends BaseService<NewsArticles, NewsArticleRepository> {
   constructor(@InjectRepository(NewsArticles) repository: NewsArticleRepository) {
     super(repository);
   }
