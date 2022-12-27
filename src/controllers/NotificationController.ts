@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { Controller, Middleware, Get, Put, Post, Delete } from '@overnightjs/core';
 import { checkJwt } from '../middleware/checkJwt.middleware';
 import { checkRole } from '../middleware/checkRole.middleware';
-import { UserService } from '../services/UserService';
-import { User } from '../entities/User';
+import { NotificationService } from '../services/NotificationService';
+import { Notification } from '../entities/Notification';
 import { Roles } from '../consts/Roles';
 import { Service } from 'typedi';
 import Log from '../utils/Log';
@@ -18,15 +18,15 @@ export class NotificationController {
 
   private dataResponse: BaseResponse = new BaseResponse();
   private className = 'CommentController';
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly notifcationService: NotificationService) { }
 
   @Get('list')
-  @Middleware([checkJwt, checkRole([{ role: Roles.CORPORATE }])])
+  @Middleware([checkJwt])
   private async listNotification(req: Request, res: Response, next: NextFunction): Promise<void> {
     Log.info(this.className, 'listUser', `RQ`, { req: req });
 
     try {
-      const result: User[] = await this.userService.getCustomerUsers().catch((e) => {
+      const result: Notification[] = await this.notifcationService.getAllListNotification().catch((e) => {
         throw e;
       });
 
@@ -45,6 +45,12 @@ export class NotificationController {
     Log.info(this.className, 'addComment', `RQ`, { req: req });
 
     try {
+
+      const notif: Notification = JSON.parse(req.body) as Notification;
+      const noti: Notification = await this.notifcationService.store(notif).catch((e) => {
+        throw e;
+      });
+      
       const topicName = 'push_message';
       const deviceTokens: string[] = [];
       deviceTokens.push()

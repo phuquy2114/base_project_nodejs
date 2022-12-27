@@ -21,6 +21,7 @@ export class Notification extends BaseEntity {
     @Column("text")
     body: string;
 
+    // CKEditor 
     @Column("text")
     attribute: string;
 
