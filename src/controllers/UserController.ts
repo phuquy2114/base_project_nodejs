@@ -351,6 +351,28 @@ export class UserController {
       next(e);
     }
   }
+
+@Put('update/location')
+  @Middleware([checkJwt, checkRole([{ role: Roles.NONE }])])
+  private async updateLocation(req: Request, res: Response, next: NextFunction): Promise<void> {
+    Log.info(this.className, 'updateUser', `RQ`, { req: req });
+
+    try {
+      console.log(req.body.usr);
+      console.log(req.body.location);
+      const user: User = <User>req.body;
+      console.log(user);
+      const newUser: User = await this.userService.findById(res.locals.jwtPayload['uuid']).catch((e) => {
+        throw e;
+      });
+      newUser.location = user.location;
+
+      await newUser.save();
+      res.status(200).json({ data: newUser });
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default function teamplateVerfification(fullName: string, code: string): string {
