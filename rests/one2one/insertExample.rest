@@ -1,8 +1,0 @@
-@baseUrl=http://localhost:3002/api
-
-POST {{baseUrl}}/one2one/insertExample
-content-type: application/json
-
-{
-    
-}
